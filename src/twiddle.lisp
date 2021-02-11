@@ -27,6 +27,43 @@
 (deftype octet-array ()
   `(simple-array uint8 *))
 
+(defmacro m32 (val)
+  `(mask-field (byte 32 0) ,val))
+
+(defmacro m64 (val)
+  `(mask-field (byte 64 0) ,val))
+
+#+sbcl
+(defmacro rotl (count bytespec integer)
+  `(mask-field ,bytespec (rotate-byte ,count ,bytespec ,integer)))
+
+#-sbcl
+(defmacro rotl (count bytespec integer)
+  `(logior (ldb ,bytespec (ash ,integer ,count))
+           (ldb ,bytespec (ash ,integer (- ,count (car ,bytespec))))))
+
+(defmacro rotl32 (count integer)
+  `(rotl ,count (byte 32 0) ,integer))
+
+(defmacro rotl64 (count integer)
+  `(rotl ,count (byte 64 0) ,integer))
+
+(defmacro bytes->le32 (ary offset)
+  `(logior (aref ,ary ,offset)
+           (ash (aref ,ary (+ 1 ,offset)) 8)
+           (ash (aref ,ary (+ 2 ,offset)) 16)
+           (ash (aref ,ary (+ 3 ,offset)) 24)))
+
+(defmacro bytes->le64 (ary offset)
+  `(logior (aref ,ary ,offset)
+           (ash (aref ,ary (+ 1 ,offset)) 8)
+           (ash (aref ,ary (+ 2 ,offset)) 16)
+           (ash (aref ,ary (+ 3 ,offset)) 24)
+           (ash (aref ,ary (+ 4 ,offset)) 32)
+           (ash (aref ,ary (+ 5 ,offset)) 40)
+           (ash (aref ,ary (+ 6 ,offset)) 48)
+           (ash (aref ,ary (+ 7 ,offset)) 56)))
+
 (defconstant +max-fixnum-bits+ (integer-length most-positive-fixnum))
 (defconstant +starting-length+ 128)
 
