@@ -6,6 +6,8 @@
            :fnv1a/32 :fnv1a/64 :fnv1a/128 :fnv1a/256 :fnv1a/512 :fnv1a/1024
 
            :xxhash/32 :xxhash/64
+
+           :siphash
            
            :hash-uint8 :hash-int8 :hash-uint16 :hash-int16
            :hash-uint32 :hash-int32 :hash-uint64 :hash-int64

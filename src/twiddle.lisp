@@ -24,6 +24,12 @@
 (deftype int64 ()
   `(signed-byte 64))
 
+(deftype uint128 ()
+  `(unsigned-byte 128))
+
+(deftype int128 ()
+  `(signed-byte 128))
+
 (deftype octet-array ()
   `(simple-array uint8 *))
 
@@ -82,7 +88,7 @@
 (declaim (ftype (function (output-buffer input-buffer) (values)) reset-context))
 (defun reset-context (output input)
   (declare (optimize speed))
-  (setf (buffer-position *input*) 0
+  (setf (buffer-position input) 0
         (fast-io::output-buffer-len output) 0
         (fast-io::output-buffer-fill output) 0))
 

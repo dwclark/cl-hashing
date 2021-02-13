@@ -113,12 +113,12 @@
                      k (rotl64 31 k)
                      k (m64 (* k +prime-64-1+))
                      hash (m64 (logxor hash k))
-                     hash (m64 (+ (* (rotl64 27 hash) +prime-64-1+) +prime-64-4)))
+                     hash (m64 (+ (* (rotl64 27 hash) +prime-64-1+) +prime-64-4+)))
                (incf offset 8)))
 
     (when (<= offset (- size 4))
       (setf hash (m64 (logxor hash (* (bytes->le32 buffer offset) +prime-64-1+)))
-            hash (m64 (+ (* (rotl64 23 hash) +prime-64-2+) +prime-64-3)))
+            hash (m64 (+ (* (rotl64 23 hash) +prime-64-2+) +prime-64-3+)))
       (incf offset 4))
 
     (loop while (< offset size)
