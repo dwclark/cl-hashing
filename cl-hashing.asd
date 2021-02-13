@@ -10,7 +10,9 @@
                (:file "twiddle")
                (:file "tabulation")
                (:file "fnv")
-               (:file "xxhash")))
+               (:file "xx")
+               (:file "polynomial")
+               (:file "sip")))
 
 (asdf:defsystem "cl-hashing/test"
   :depends-on ("cl-hashing" "fiasco" "alexandria")
