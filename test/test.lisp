@@ -39,13 +39,25 @@
     (reset-context output input)
     (hash-simple-string output "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz1")
     (is (= 7493943686480554688 (xxhash/64 buffer (fast-io::output-buffer-len output))))))
- 
+
+(defparameter *sip-buffer-1*
+  (make-array 8 :element-type '(unsigned-byte 8) :initial-contents '(1 2 3 4 5 6 7 8)))
+
+(defparameter *sip-buffer-2*
+  (make-array 19 :element-type '(unsigned-byte 8)
+                 :initial-contents '(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19)))
+
+(defparameter *sip-buffer-3*
+  (make-array 37 :element-type '(unsigned-byte 8)
+                 :initial-contents '(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
+                                     20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37)))
+
 (deftest test-siphash ()
-  (let ((buffer1 (make-array 8 :element-type '(unsigned-byte 8) :initial-contents '(1 2 3 4 5 6 7 8)))
-        (buffer2 (make-array 19 :element-type '(unsigned-byte 8)
-                             :initial-contents '(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19)))
-        (key #x18171615141312111817161514131211))
-    (is (= #xC266649AFC8073CD (siphash buffer2 19 key 64 2 4)))
-    (is (= #xC266649AFC8073CD (siphash buffer2 19 key)))
-    (is (= #xE8E704BCA160ED28 (siphash buffer1 8 key 64 2 4)))
-    (is (= #x1ABA65FE6E3BDA5F12AE34E5197A8D23 (siphash buffer2 19 key 128 2 4)))))
+  (let ((key #x18171615141312111817161514131211))
+    (is (= #xC266649AFC8073CD (siphash *sip-buffer-2* (length *sip-buffer-2*) key 64 2 4)))
+    (is (= #xC266649AFC8073CD (siphash *sip-buffer-2* (length *sip-buffer-2*) key)))
+    (is (= #xE8E704BCA160ED28 (siphash *sip-buffer-1* (length *sip-buffer-1*) key 64 2 4)))
+    (is (= #x1ABA65FE6E3BDA5F12AE34E5197A8D23
+           (siphash *sip-buffer-2* (length *sip-buffer-2*) key 128 2 4)))
+    (is (= #xD408DC2FA9D08338782EB82C9E9725C5
+           (siphash *sip-buffer-3* (length *sip-buffer-3*) key 128)))))
