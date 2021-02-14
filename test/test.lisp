@@ -83,6 +83,4 @@
   (is (= #xC257A88344E7B58F (my-halfsiphash/64 *sip-buffer-3* (length *sip-buffer-3*))))
 
   (is (= (cl-hashing::mfix #xE39836824BE728E5) (my-halfsiphash/fixnum *sip-buffer-2* (length *sip-buffer-2*))))
-  (is (= (cl-hashing::mfix #xC257A88344E7B58F) (my-halfsiphash/fixnum *sip-buffer-3* (length *sip-buffer-3*))))
-
-  )
+  (is (= (cl-hashing::mfix #xC257A88344E7B58F) (my-halfsiphash/fixnum *sip-buffer-3* (length *sip-buffer-3*)))))
