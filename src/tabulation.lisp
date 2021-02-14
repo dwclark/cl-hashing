@@ -1,11 +1,9 @@
 (in-package :cl-hashing)
 
 (declaim (type (uint32) +seed-32+))
-
 (define-constant +seed-32+ #x90c9c730 :test 'eql)
 
 (declaim (type (simple-array uint32 1024) +table-32+))
-
 (define-constant +table-32+
   (make-array 1024
               :element-type 'uint32
@@ -184,9 +182,9 @@
   :test #'equalp)
 
 (declaim (type (uint64) +seed-64+))
-         
 (define-constant +seed-64+ #xbf60ad4d64f8b0ba :test 'eql)
 
+(declaim (type (simple-array uint64 2048) +table-64+))
 (define-constant +table-64+
   (make-array 2048
               :element-type 'uint64
@@ -707,14 +705,12 @@
   :test 'equalp)
 
 (defmacro next-32 (index u8)
-  (once-only (index u8)
-    `(the uint32 (aref +table-32+ (+ ,u8 (ash (ldb (byte 2 0) ,index) 8))))))
+  `(the uint32 (aref +table-32+ (+ ,u8 (ash (ldb (byte 2 0) ,index) 8)))))
 
 (defmacro next-64 (index u8)
-  (once-only (index u8)
-    `(the uint64 (aref +table-64+ (+ ,u8 (ash (ldb (byte 3 0) ,index) 8))))))
+  `(the uint64 (aref +table-64+ (+ ,u8 (ash (ldb (byte 3 0) ,index) 8)))))
 
-(declaim (ftype (function (octet-array uint32) uint32) tab-hash/32))
+(declaim (ftype (function (octet-array uint32) uint32) tabhash/32))
 (defun tabhash/32 (buffer size)
   (declare (optimize (speed 3) (safety 0) (debug 0)))
   (loop for index of-type uint32 from 0 below size
@@ -722,7 +718,7 @@
         do (setf hash (logxor hash (next-32 index (aref buffer index))))
         finally (return hash)))
 
-(declaim (ftype (function (octet-array uint32) uint64) tab-hash/64))
+(declaim (ftype (function (octet-array uint32) uint64) tabhash/64))
 (defun tabhash/64 (buffer size)
   (declare (optimize (speed 3) (safety 0) (debug 0)))
   (loop for index of-type uint32 from 0 below size
@@ -730,7 +726,7 @@
         do (setf hash (logxor hash (next-64 index (aref buffer index))))
         finally (return hash)))
 
-(declaim (ftype (function (octet-array uint32) fixnum) tab-hash/fixnum))
+(declaim (ftype (function (octet-array uint32) fixnum) tabhash/fixnum))
 (defun tabhash/fixnum (buffer size)
   (declare (optimize (speed 3) (safety 0) (debug 0)))
   (loop for index of-type uint32 from 0 below size
