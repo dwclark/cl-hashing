@@ -736,4 +736,4 @@
   (loop for index of-type uint32 from 0 below size
         with hash of-type uint64 = #.+seed-64+
         do (setf hash (logxor hash (next-64 index (aref buffer index))))
-        finally (return (->fixnum hash))))
+        finally (return (mfix hash))))

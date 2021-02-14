@@ -52,12 +52,37 @@
                  :initial-contents '(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
                                      20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37)))
 
-(deftest test-siphash ()
-  (let ((key #x18171615141312111817161514131211))
-    (is (= #xC266649AFC8073CD (siphash *sip-buffer-2* (length *sip-buffer-2*) key 64 2 4)))
-    (is (= #xC266649AFC8073CD (siphash *sip-buffer-2* (length *sip-buffer-2*) key)))
-    (is (= #xE8E704BCA160ED28 (siphash *sip-buffer-1* (length *sip-buffer-1*) key 64 2 4)))
-    (is (= #x1ABA65FE6E3BDA5F12AE34E5197A8D23
-           (siphash *sip-buffer-2* (length *sip-buffer-2*) key 128 2 4)))
-    (is (= #xD408DC2FA9D08338782EB82C9E9725C5
-           (siphash *sip-buffer-3* (length *sip-buffer-3*) key 128)))))
+(define-siphash/64 my-siphash/64 (#x18171615141312111817161514131211 2 4))
+(define-siphash/fixnum my-siphash/fixnum (#x18171615141312111817161514131211 2 4))
+(define-siphash/128 my-siphash/128 (#x18171615141312111817161514131211 2 4))
+
+(deftest test-siphash-macros ()
+  (is (= #xC266649AFC8073CD (my-siphash/64 *sip-buffer-2* (length *sip-buffer-2*))))
+  (is (= #xC266649AFC8073CD (my-siphash/64 *sip-buffer-2* (length *sip-buffer-2*))))
+  (is (= #xE8E704BCA160ED28 (my-siphash/64 *sip-buffer-1* (length *sip-buffer-1*))))
+  
+  (is (= (cl-hashing::mfix #xC266649AFC8073CD) (my-siphash/fixnum *sip-buffer-2* (length *sip-buffer-2*))))
+  (is (= (cl-hashing::mfix #xC266649AFC8073CD) (my-siphash/fixnum *sip-buffer-2* (length *sip-buffer-2*))))
+  (is (= (cl-hashing::mfix #xE8E704BCA160ED28) (my-siphash/fixnum *sip-buffer-1* (length *sip-buffer-1*))))
+
+  (is (= #x1ABA65FE6E3BDA5F12AE34E5197A8D23 (my-siphash/128 *sip-buffer-2* (length *sip-buffer-2*))))
+  (is (= #xD408DC2FA9D08338782EB82C9E9725C5 (my-siphash/128 *sip-buffer-3* (length *sip-buffer-3*)))))
+
+(define-halfsiphash/32 my-halfsiphash/32 (#x1413121114131211 2 4))
+(define-halfsiphash/64 my-halfsiphash/64 (#x1413121114131211 2 4))
+(define-halfsiphash/fixnum my-halfsiphash/fixnum (#x1413121114131211 2 4))
+
+(deftest test-halfsiphash-macros ()
+  (is (= #x21637A53 (my-halfsiphash/32 *sip-buffer-1* (length *sip-buffer-1*))))
+  (is (= #xC347291A (my-halfsiphash/32 *sip-buffer-2* (length *sip-buffer-2*))))
+
+  (is (= #xE39836824BE728E5 (my-halfsiphash/64 *sip-buffer-2* (length *sip-buffer-2*))))
+  (is (= #xC257A88344E7B58F (my-halfsiphash/64 *sip-buffer-3* (length *sip-buffer-3*))))
+
+  (is (= #xE39836824BE728E5 (my-halfsiphash/64 *sip-buffer-2* (length *sip-buffer-2*))))
+  (is (= #xC257A88344E7B58F (my-halfsiphash/64 *sip-buffer-3* (length *sip-buffer-3*))))
+
+  (is (= (cl-hashing::mfix #xE39836824BE728E5) (my-halfsiphash/fixnum *sip-buffer-2* (length *sip-buffer-2*))))
+  (is (= (cl-hashing::mfix #xC257A88344E7B58F) (my-halfsiphash/fixnum *sip-buffer-3* (length *sip-buffer-3*))))
+
+  )

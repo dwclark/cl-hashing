@@ -73,8 +73,8 @@
 (defconstant +max-fixnum-bits+ (integer-length most-positive-fixnum))
 (defconstant +starting-length+ 128)
 
-(defmacro ->fixnum (&body body)
-  `(ldb (byte +max-fixnum-bits+ 0) ,@body))
+(defmacro mfix (&body body)
+  `(ldb (byte ,+max-fixnum-bits+ 0) ,@body))
 
 (declaim (ftype (function () (values octet-vector output-buffer input-buffer)) hash-io-context))
 (defun hash-io-context ()
