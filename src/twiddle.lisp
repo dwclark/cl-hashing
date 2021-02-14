@@ -39,6 +39,8 @@
 (defmacro m64 (val)
   `(mask-field (byte 64 0) ,val))
 
+(defmacro ret-self (v) `(values ,v))
+
 #+sbcl
 (defmacro rotl (count bytespec integer)
   `(mask-field ,bytespec (rotate-byte ,count ,bytespec ,integer)))

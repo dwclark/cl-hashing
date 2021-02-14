@@ -715,7 +715,7 @@
     `(the uint64 (aref +table-64+ (+ ,u8 (ash (ldb (byte 3 0) ,index) 8))))))
 
 (declaim (ftype (function (octet-array uint32) uint32) tab-hash/32))
-(defun tab-hash/32 (buffer size)
+(defun tabhash/32 (buffer size)
   (declare (optimize (speed 3) (safety 0) (debug 0)))
   (loop for index of-type uint32 from 0 below size
         with hash of-type uint32 = #.+seed-32+
@@ -723,7 +723,7 @@
         finally (return hash)))
 
 (declaim (ftype (function (octet-array uint32) uint64) tab-hash/64))
-(defun tab-hash/64 (buffer size)
+(defun tabhash/64 (buffer size)
   (declare (optimize (speed 3) (safety 0) (debug 0)))
   (loop for index of-type uint32 from 0 below size
         with hash of-type uint64 = #.+seed-64+
@@ -731,7 +731,7 @@
         finally (return hash)))
 
 (declaim (ftype (function (octet-array uint32) fixnum) tab-hash/fixnum))
-(defun tab-hash/fixnum (buffer size)
+(defun tabhash/fixnum (buffer size)
   (declare (optimize (speed 3) (safety 0) (debug 0)))
   (loop for index of-type uint32 from 0 below size
         with hash of-type uint64 = #.+seed-64+

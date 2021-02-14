@@ -1,6 +1,6 @@
 (in-package :cl-hashing)
 
-(defmacro define-polynomial-hash (name (out-size prime))
+(defmacro define-polynomial-hash (name (out-size prime finalize))
   `(progn
      (declaim (ftype (function (octet-array uint32) (unsigned-byte ,out-size)) ,name))
      (defun ,name (buffer size)
@@ -9,9 +9,11 @@
              with hash of-type (unsigned-byte ,out-size) = ,prime
              for index of-type fixnum from 0 below size
              do (setf hash (mask-field (byte ,out-size 0) (+ (* hash multiplier) (aref buffer index))))
-             finally (return hash)))))
+             finally (return (,finalize hash))))))
 
-(define-polynomial-hash polynomial/32 (32 5231))
+(define-polynomial-hash polynomial/32 (32 5231 ret-self))
 
-(define-polynomial-hash polynomial/64 (64 7331))
+(define-polynomial-hash polynomial/64 (64 7331 ret-self))
+
+(define-polynomial-hash polynomial/fixnum (64 7331 mfix))
 
