@@ -40,6 +40,7 @@
            (,k1 (ldb (byte 32 0) ,key)))
        (declaim (ftype (function (octet-array uint32) ,out-type) ,name))
        (defun ,name (buffer size)
+         (declare (optimize (speed 3) (safety 0) (debug 0)))
          (let ((v0 0)
                (v1 0)
                (v2 #x6c796765)
